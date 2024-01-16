@@ -1,1 +1,1 @@
-from .mastermind import play
+from .mastermind import mastermind
