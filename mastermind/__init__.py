@@ -1,1 +1,1 @@
-from .mastermind import mastermind
+from . import mastermind

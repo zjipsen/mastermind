@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from enum import Enum
+from typing import List
+
 import sys
 
 
@@ -20,11 +23,11 @@ class Feedback(Enum):
 
 
 class Code:
-    def __init__(self, code: Color[], feedback: Feedback[]=None):
+    def __init__(self, code: List[Color], feedback: List[Feedback]=None):
         self.code = code
         self.feedback = feedback
 
-    def generate_feedback(solution: Code):
+    def generate_feedback(solution):
         sln = solution.deepcopy()
 
         if len(self.code) != len(solution):
@@ -44,7 +47,9 @@ class Code:
 
 
 class Mastermind:
-    def __init__(self,)
+    def __init__(self, code: Code):
+        self.code = code
+        return
 
 
 
