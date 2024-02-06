@@ -2,8 +2,9 @@
 from enum import Enum
 from typing import List
 
+import click
+import copy
 import sys
-
 
 
 class Color:
@@ -27,23 +28,21 @@ class Code:
         self.code = code
         self.feedback = feedback
 
-    def generate_feedback(solution):
-        sln = solution.deepcopy()
+    def generate_feedback(self, solution) -> None:
+        sln = copy.deepcopy(solution)
 
-        if len(self.code) != len(solution):
+        if self.code and solution.code and len(self.code) != len(solution.code):
             raise ValueError("Code is a different length than solution.")
         feedback = []
-        for color, i in enumerate(self.code):
-            if color == solution[i].color:
-                sln.remove(color)
+        for i, color in enumerate(self.code):
+            if color == solution.code[i]:
+                sln.code.remove(color)
                 feedback.append(Feedback.RED)
-        for color, i in enumerate(self.code):
-            if color != solution[i].color and color in sln:  # this is wrong -- should be in solution __ number of times! 
-                sln.remove(color) # will this work? they're not the same object
+        for i, color in enumerate(self.code):
+            if color != solution.code[i] and color in sln.code:
+                sln.code.remove(color)
                 feedback.append(Feedback.WHITE)
-
-
-
+        self.feedback = feedback
 
 
 class Mastermind:
@@ -68,9 +67,10 @@ class Mastermind:
 
 
 
-
+@click.command("hello")
+@click.version_option("0.1.0", prog_name="hello")
 def play():
-    print("Hello World")
+    click.echo("Hello World")
 
 def main() -> int:
     """Echo the input arguments to standard output"""
