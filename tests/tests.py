@@ -60,7 +60,24 @@ class TestCodeMethods(unittest.TestCase):
         guess.generate_feedback(answer_code)
         self.assertIsNotNone(guess.feedback)
         self.assertIsInstance(guess.feedback, list)
-        self.assertEqual([mastermind.Feedback.WHITE, mastermind.Feedback.WHITE], guess.feedback)
+        self.assertListEqual([mastermind.Feedback.WHITE, mastermind.Feedback.WHITE], guess.feedback)
+
+    def test_assert_two_white_one_red_feedback(self):
+        green = mastermind.Color("green")
+        red = mastermind.Color("red")
+        blue = mastermind.Color("blue")
+        yellow = mastermind.Color("yellow")
+
+        answer_code = mastermind.Code([red, green, yellow, blue])
+        guess = mastermind.Code([green, red, yellow, red])
+
+        guess.generate_feedback(answer_code)
+        self.assertIsNotNone(guess.feedback)
+        self.assertIsInstance(guess.feedback, list)
+        self.assertEqual(guess.feedback.count(mastermind.Feedback.WHITE), 2)
+        self.assertEqual(guess.feedback.count(mastermind.Feedback.RED), 1)
+        self.assertEqual(len(guess.feedback), 3)
+
 
 def main() -> int:
     """Echo the input arguments to standard output"""

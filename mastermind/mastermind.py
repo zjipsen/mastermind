@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from enum import Enum
+from prompt_toolkit import prompt
 from typing import List
 
 import click
@@ -46,11 +47,26 @@ class Code:
 
 
 class Mastermind:
-    def __init__(self, code: Code):
-        self.code = code
-        return
+    def __init__(self, answer_code: Code):
+        self.answer_code = answer_code
 
+    """
+    MOST BASIC VERSION: what needs to happen every new game?
 
+    - 4-color code randomly chosen
+    - tell you which 6 colors are available to choose from 
+    - prompt you for first guess
+    - validate guess (used only valid colors w/ accepted name spelling, correct number of colors) with informative error messages
+    - you get 11 guesses (can be repeats--that's your fault)
+    - gives RANDOMIZED feedback for each guess
+    - if guess is correct, end game as WIN
+    - if 11th guess is still wrong, end game as LOSE and SHOW ANSWER
+    
+    gameplay options:
+    - mid-game, you can give up and start a new game if you want
+    - option for no double colors
+
+    """
 
 
 
@@ -68,9 +84,12 @@ class Mastermind:
 
 
 @click.command("hello")
-@click.version_option("0.1.0", prog_name="hello")
+@click.version_option("0.1.0", prog_name="mastermind")  # TODO: replace version & name with setup.py version/name
 def play():
-    click.echo("Hello World")
+    click.echo("Welcome to Mastermind! (exit with control-D)")
+    while 1:
+        user_input = prompt('>')
+        print(user_input)
 
 def main() -> int:
     """Echo the input arguments to standard output"""
