@@ -9,26 +9,26 @@ class TestCodeMethods(unittest.TestCase):
         self.assertIsInstance(code, mastermind.Code)
 
     def test_instantiate_with_colors(self):
-        green = mastermind.Color("green")
-        code = mastermind.Code([green])
+        GREEN = mastermind.Color.GREEN
+        code = mastermind.Code([GREEN])
         self.assertIsInstance(code.code.pop(), mastermind.Color)
 
     def test_deepcopy(self):
-        green = mastermind.Color("green")
-        code = mastermind.Code([green])
+        GREEN = mastermind.Color.GREEN
+        code = mastermind.Code([GREEN])
         code_copy = copy.deepcopy(code)
         
         self.assertIsInstance(code_copy, mastermind.Code)
-        self.assertIsNot(green, code_copy.code[0])
-        self.assertEqual(green, code_copy.code[0])
+        self.assertIs(GREEN, code_copy.code[0])
+        self.assertEqual(GREEN, code_copy.code[0])
 
     def test_assert_one_red_feedback(self):
-        green = mastermind.Color("green")
-        red = mastermind.Color("red")
-        blue = mastermind.Color("blue")
+        GREEN = mastermind.Color.GREEN
+        RED = mastermind.Color.RED
+        BLUE = mastermind.Color.BLUE
 
-        answer_code = mastermind.Code([green, green])
-        guess = mastermind.Code([green, blue])
+        answer_code = mastermind.Code([GREEN, GREEN])
+        guess = mastermind.Code([GREEN, BLUE])
 
         self.assertIsNone(guess.feedback)
         guess.generate_feedback(answer_code)
@@ -37,12 +37,12 @@ class TestCodeMethods(unittest.TestCase):
         self.assertEqual([mastermind.Feedback.RED], guess.feedback)
 
     def test_assert_empty_feedback(self):
-        green = mastermind.Color("green")
-        red = mastermind.Color("red")
-        blue = mastermind.Color("blue")
+        GREEN = mastermind.Color.GREEN
+        RED = mastermind.Color.RED
+        BLUE = mastermind.Color.BLUE
 
-        answer_code = mastermind.Code([green, red])
-        guess = mastermind.Code([blue, blue])
+        answer_code = mastermind.Code([GREEN, RED])
+        guess = mastermind.Code([BLUE, BLUE])
 
         self.assertIsNone(guess.feedback)
         guess.generate_feedback(answer_code)
@@ -51,11 +51,11 @@ class TestCodeMethods(unittest.TestCase):
         self.assertEqual([], guess.feedback)
 
     def test_assert_two_white_feedback(self):
-        green = mastermind.Color("green")
-        red = mastermind.Color("red")
+        GREEN = mastermind.Color.GREEN
+        RED = mastermind.Color.RED
 
-        answer_code = mastermind.Code([red, green])
-        guess = mastermind.Code([green, red])
+        answer_code = mastermind.Code([RED, GREEN])
+        guess = mastermind.Code([GREEN, RED])
 
         guess.generate_feedback(answer_code)
         self.assertIsNotNone(guess.feedback)
@@ -63,13 +63,13 @@ class TestCodeMethods(unittest.TestCase):
         self.assertListEqual([mastermind.Feedback.WHITE, mastermind.Feedback.WHITE], guess.feedback)
 
     def test_assert_two_white_one_red_feedback(self):
-        green = mastermind.Color("green")
-        red = mastermind.Color("red")
-        blue = mastermind.Color("blue")
-        yellow = mastermind.Color("yellow")
+        GREEN = mastermind.Color.GREEN
+        RED = mastermind.Color.RED
+        BLUE = mastermind.Color.BLUE
+        YELLOW = mastermind.Color.YELLOW
 
-        answer_code = mastermind.Code([red, green, yellow, blue])
-        guess = mastermind.Code([green, red, yellow, red])
+        answer_code = mastermind.Code([RED, GREEN, YELLOW, BLUE])
+        guess = mastermind.Code([GREEN, RED, YELLOW, RED])
 
         guess.generate_feedback(answer_code)
         self.assertIsNotNone(guess.feedback)

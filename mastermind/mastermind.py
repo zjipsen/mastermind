@@ -8,20 +8,22 @@ import copy
 import sys
 
 
-class Color:
-    def __init__(self, name: str):
-        self.name = name
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.__dict__ == other.__dict__
-        else:
-            return False
-
-
 class Feedback(Enum):
     WHITE = 1
     RED = 2
+
+
+class Color(Enum):
+    BLUE = 1
+    GREEN = 2
+    VIOLET = 3
+    WHITE = 4
+    YELLOW = 5
+    RED = 6
+
+    @classmethod
+    def aslist(cls):
+        return [cls.BLUE, cls.GREEN, cls.VIOLET, cls.WHITE, cls.YELLOW, cls.RED]
 
 
 class Code:
@@ -51,6 +53,10 @@ class Mastermind:
         self.answer_code = answer_code
 
     def generate_random_answer_code(self):
+        pass
+
+    def user_input_to_colors(self, guess):
+        # Takes in a list of strings and attempts to map each string to a known Color
         pass
 
     def is_valid_guess(self, guess) -> bool:
@@ -112,13 +118,12 @@ def play():
     # loop until user exits with control-D
     while 1:
         print_formatted_text(HTML(skyblue('Would you like to start a new game? (y/n)')))
-        user_input = prompt('>')
+        user_input = prompt('> ')
 
         if user_input.lower() == "y":
             print_formatted_text(HTML(skyblue(f"Generating code using {num_colors} out of {num_total_colors} colors.")))
             print_formatted_text(HTML(skyblue(f"Here are the possible colors: ")))
             print_formatted_text(HTML(white("white, ") + blue("blue, ") + seagreen("green, ") + yellow("yellow, ") + red("red, ") + violet("violet.")))
-
             print_formatted_text(HTML(skyblue(f"\nPlease make your first guess by listing four colors (repeats okay), separated by spaces.")))
 
             playing_game = True
@@ -134,9 +139,8 @@ def play():
 
         if user_input == "n":
             print_formatted_text(HTML(violet("Well. I'm not sure how to help you then. Are you having a nice day?")))
-            user_input = prompt('>')
+            user_input = prompt('> ')
             print_formatted_text("++" + user_input)
-
 
 
 def main() -> int:
