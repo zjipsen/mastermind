@@ -51,18 +51,43 @@ class Code:
 class Mastermind:
     def __init__(self, answer_code: Code=None):
         self.answer_code = answer_code
+        self.num_total_colors = 6
+        self.num_digits_in_code = 4
+        self.num_turns = 11
 
     def generate_random_answer_code(self):
         pass
 
     def user_input_to_colors(self, guess):
         # Takes in a list of strings and attempts to map each string to a known Color
-        pass
+        converted_guess = []
+        for color in [g.lower() for g in guess]:
+            if color == "blue" or color == "b":
+                converted_guess.append(Color.BLUE)
+            elif color == "green" or color == "g":
+                converted_guess.append(Color.GREEN)
+            elif color == "violet" or color == "v":
+                converted_guess.append(Color.VIOLET)
+            elif color == "white" or color == "w":
+                converted_guess.append(Color.WHITE)
+            elif color == "yellow" or color == "y":
+                converted_guess.append(Color.YELLOW)
+            elif color == "red" or color == "r":
+                converted_guess.append(Color.RED)
+        return converted_guess
 
     def is_valid_guess(self, guess) -> bool:
-        pass
+        guess_lst = guess.split()
+        if len(guess_lst) != self.num_digits_in_code:  # guess must be number of digits long
+            return False
+
+        color_lst = self.user_input_to_colors(guess_lst)
+        if len(guess_lst) != len(color_lst):  # something went wrong in conversion
+            return False
+        return True
 
     def make_guess(self, guess) -> List[Feedback]:
+        #  assuming guess was already validated
         pass
 
 
@@ -111,9 +136,6 @@ def red(text):
 @click.version_option("0.1.0", prog_name="mastermind")  # TODO: replace version & name with setup.py version/name
 def play():
     click.echo("Welcome to Mastermind! (exit with control-D)")
-    num_total_colors = 6
-    num_colors = 4
-    num_turns = 11
 
     # loop until user exits with control-D
     while 1:
@@ -121,16 +143,17 @@ def play():
         user_input = prompt('> ')
 
         if user_input.lower() == "y":
-            print_formatted_text(HTML(skyblue(f"Generating code using {num_colors} out of {num_total_colors} colors.")))
+            game = Mastermind()
+
+            print_formatted_text(HTML(skyblue(f"Generating code using {game.num_digits_in_code} out of {game.num_total_colors} colors.")))
             print_formatted_text(HTML(skyblue(f"Here are the possible colors: ")))
             print_formatted_text(HTML(white("white, ") + blue("blue, ") + seagreen("green, ") + yellow("yellow, ") + red("red, ") + violet("violet.")))
             print_formatted_text(HTML(skyblue(f"\nPlease make your first guess by listing four colors (repeats okay), separated by spaces.")))
 
             playing_game = True
             while playing_game:
-                game = Mastermind()
 
-                user_input = prompt('>')
+                user_input = prompt('> ')
                 if game.is_valid_guess(user_input):
                     feedback = game.make_guess(user_input)
                 else:
