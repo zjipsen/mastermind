@@ -5,6 +5,7 @@ from typing import List
 
 import click
 import copy
+import random
 import sys
 
 
@@ -51,12 +52,19 @@ class Code:
 class Mastermind:
     def __init__(self, answer_code: Code=None):
         self.answer_code = answer_code
+        self.guesses = []
         self.num_total_colors = 6
         self.num_digits_in_code = 4
-        self.num_turns = 11
+        self.num_turns_total = 11
+        self.num_turns_left = self.num_turns_total
+        self.colors = Color.aslist()[:self.num_total_colors]
 
     def generate_random_answer_code(self):
-        pass
+        self.answer_code_lst = []
+        for _ in range(self.num_digits_in_code):
+            i = random.randrange(0, len(self.colors))
+            self.answer_code_lst.append(self.colors[i])
+        self.answer_code = Code(self.answer_code_lst)
 
     def user_input_to_colors(self, guess):
         # Takes in a list of strings and attempts to map each string to a known Color
@@ -87,8 +95,16 @@ class Mastermind:
         return True
 
     def make_guess(self, guess) -> List[Feedback]:
-        #  assuming guess was already validated
-        pass
+        """ Return randomized feedback. Assumes guess was already validated. """
+        color_lst = self.user_input_to_colors(guess.split())
+        guess = Code(code=color_lst)
+        guess.generate_feedback(self.answer_code)
+        self.guesses.append(guess)
+        self.num_turns_left -= 1
+
+        shuffled_feedback = copy.deepcopy(guess.feedback)
+        random.shuffle(shuffled_feedback)
+        return shuffled_feedback
 
 
     """
@@ -144,6 +160,8 @@ def play():
 
         if user_input.lower() == "y":
             game = Mastermind()
+            game.generate_random_answer_code()
+            print_formatted_text(game.answer_code.code)
 
             print_formatted_text(HTML(skyblue(f"Generating code using {game.num_digits_in_code} out of {game.num_total_colors} colors.")))
             print_formatted_text(HTML(skyblue(f"Here are the possible colors: ")))
@@ -153,11 +171,14 @@ def play():
             playing_game = True
             while playing_game:
 
-                user_input = prompt('> ')
+                user_input = prompt(f"Turn {game.num_turns_total - game.num_turns_left + 1} > ")
                 if game.is_valid_guess(user_input):
                     feedback = game.make_guess(user_input)
+                    formatted_feedback = [red("RED") if x == Feedback.RED else white("WHITE") for x in feedback]
+                    print_formatted_text(HTML(skyblue("Feedback: ") + " ".join(formatted_feedback)))
                 else:
-                    pass # re-get user input until it's valid
+                    print_formatted_text(HTML(red(f"I'm sorry, I couldn't parse that. Please make your guess again.")))
+
 
 
         if user_input == "n":
