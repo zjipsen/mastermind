@@ -78,6 +78,25 @@ class TestCodeMethods(unittest.TestCase):
         self.assertEqual(guess.feedback.count(mastermind.Feedback.RED), 1)
         self.assertEqual(len(guess.feedback), 3)
 
+    def test_feedback_is_symmetrical(self):
+        GREEN = mastermind.Color.GREEN
+        RED = mastermind.Color.RED
+        BLUE = mastermind.Color.BLUE
+        YELLOW = mastermind.Color.YELLOW
+        WHITE = mastermind.Color.WHITE
+
+        answer_code = mastermind.Code([RED, GREEN, YELLOW, BLUE])
+        guess = mastermind.Code([GREEN, WHITE, YELLOW, GREEN])
+
+        guess.generate_feedback(answer_code)
+        answer_code.generate_feedback(guess)
+        self.assertEqual(guess.feedback.count(mastermind.Feedback.WHITE), 1)
+        self.assertEqual(guess.feedback.count(mastermind.Feedback.RED), 1)
+        self.assertEqual(len(guess.feedback), 2)
+        self.assertEqual(answer_code.feedback.count(mastermind.Feedback.WHITE), 1)
+        self.assertEqual(answer_code.feedback.count(mastermind.Feedback.RED), 1)
+        self.assertEqual(len(answer_code.feedback), 2)
+
 
 def main() -> int:
     """Echo the input arguments to standard output"""
