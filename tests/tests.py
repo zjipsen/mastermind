@@ -98,6 +98,32 @@ class TestCodeMethods(unittest.TestCase):
         self.assertEqual(len(answer_code.feedback), 2)
 
 
+class TestMastermindMethods(unittest.TestCase):
+
+    def setUp(self):
+        self.colors = [mastermind.Color.GREEN, mastermind.Color.YELLOW, mastermind.Color.RED, mastermind.Color.BLUE]
+        self.code = mastermind.Code(self.colors)
+
+    def test_instantiate_empty(self):
+        game = mastermind.Mastermind()
+        self.assertIsInstance(game, mastermind.Mastermind)
+
+    def test_instantiate_with_code(self):
+        game = mastermind.Mastermind(answer_code=self.code)
+        self.assertIs(self.code, game.answer_code)
+
+    def test_make_valid_guess(self):
+        guess = "green yellow red blue"
+        game = mastermind.Mastermind(answer_code=self.code)
+        self.assertTrue(game.is_valid_guess(guess))
+
+    def test_make_too_short_guess(self):
+        guess = "green violet"
+        game = mastermind.Mastermind(answer_code=self.code)
+        self.assertFalse(game.is_valid_guess(guess))
+
+
+
 def main() -> int:
     """Echo the input arguments to standard output"""
     unittest.main()
