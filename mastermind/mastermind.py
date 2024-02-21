@@ -157,34 +157,43 @@ def play():
     while 1:
         print_formatted_text(HTML(skyblue('Would you like to start a new game? (y/n)')))
         user_input = prompt('> ')
+        user_input = user_input.lower().strip()
 
-        if user_input.lower() == "y":
+        if user_input == "y":
             game = Mastermind()
             game.generate_random_answer_code()
-            print_formatted_text(game.answer_code.code)
 
             print_formatted_text(HTML(skyblue(f"Generating code using {game.num_digits_in_code} out of {game.num_total_colors} colors.")))
             print_formatted_text(HTML(skyblue(f"Here are the possible colors: ")))
             print_formatted_text(HTML(white("white, ") + blue("blue, ") + seagreen("green, ") + yellow("yellow, ") + red("red, ") + violet("violet.")))
-            print_formatted_text(HTML(skyblue(f"\nPlease make your first guess by listing four colors (repeats okay), separated by spaces.")))
+            print_formatted_text(HTML(skyblue(f"\nPlease make your first guess by listing four colors (repeats okay),\nseparated by spaces.")))
 
             playing_game = True
             while playing_game:
 
-                user_input = prompt(f"Turn {game.num_turns_total - game.num_turns_left + 1} > ")
-                if game.is_valid_guess(user_input):
-                    feedback = game.make_guess(user_input)
-                    formatted_feedback = [red("RED") if x == Feedback.RED else white("WHITE") for x in feedback]
-                    print_formatted_text(HTML(skyblue("Feedback: ") + " ".join(formatted_feedback)))
+                game_user_input = prompt(f"Turn {game.num_turns_total - game.num_turns_left + 1} > ")
+                if game.is_valid_guess(game_user_input):
+                    feedback = game.make_guess(game_user_input)
+                    # check winning condition
+                    if feedback == [Feedback.RED] * game.num_digits_in_code:
+                        playing_game = False
+                        print_formatted_text(HTML(seagreen("Hey! Congratulations! You did it! You won!!!!!")))
+                    else:
+                        formatted_feedback = [red("RED") if x == Feedback.RED else white("WHITE") for x in feedback]
+                        print_formatted_text(HTML(skyblue("Feedback: ") + (" ".join(formatted_feedback) if formatted_feedback else yellow("None :("))))
                 else:
                     print_formatted_text(HTML(red(f"I'm sorry, I couldn't parse that. Please make your guess again.")))
+
+                if game.num_turns_left == 0:
+                    playing_game = False  # lost.
+                    print_formatted_text(HTML(red(f"I'm very sorry to tell you this, but you have in fact lost.\n The answer was {game.answer_code}. Try again?")))
 
 
 
         if user_input == "n":
             print_formatted_text(HTML(violet("Well. I'm not sure how to help you then. Are you having a nice day?")))
-            user_input = prompt('> ')
-            print_formatted_text("++" + user_input)
+            chat_user_input = prompt('> ')
+            print_formatted_text(HTML(violet("Good for you.\n")))
 
 
 def main() -> int:
