@@ -112,10 +112,19 @@ class TestMastermindMethods(unittest.TestCase):
         game = mastermind.Mastermind(answer_code=self.code)
         self.assertIs(self.code, game.answer_code)
 
-    def test_make_valid_guess(self):
+    def test_valid_guess(self):
         guess = "green yellow red blue"
         game = mastermind.Mastermind(answer_code=self.code)
         self.assertTrue(game.is_valid_guess(guess))
+
+    def test_make_valid_guess(self):
+        guess = "green yellow blue red"
+        game = mastermind.Mastermind(answer_code=self.code)
+        self.assertTrue(game.is_valid_guess(guess))
+        feedback = game.make_guess(guess)
+        self.assertEqual(feedback.count(mastermind.Feedback.RED), 2)
+        self.assertEqual(feedback.count(mastermind.Feedback.WHITE), 2)
+        self.assertEqual(game.num_turns_left, game.num_turns_total - 1)
 
     def test_make_too_short_guess(self):
         guess = "green violet"
