@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from enum import Enum
 from prompt_toolkit import HTML, print_formatted_text, prompt
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from typing import List
 
 import click
@@ -171,7 +173,10 @@ def play():
             playing_game = True
             while playing_game:
 
-                game_user_input = prompt(f"Turn {game.num_turns_total - game.num_turns_left + 1} > ")
+                game_user_input = prompt(f"Turn {game.num_turns_total - game.num_turns_left + 1} > ", 
+                    history=FileHistory('history.txt'),
+                    auto_suggest=AutoSuggestFromHistory()
+                )
                 if game.is_valid_guess(game_user_input):
                     feedback = game.make_guess(game_user_input)
                     # check winning condition

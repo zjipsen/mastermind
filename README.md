@@ -14,7 +14,7 @@ Begin game:
 	> python3 mastermind/mastermind.py
 
 
-    MOST BASIC VERSION: what needs to happen every new game?
+    Version 1 completed. The code now has:
 
     - 4-color code randomly chosen
     - tell you which 6 colors are available to choose from 
@@ -25,6 +25,11 @@ Begin game:
     - if guess is correct, end game as WIN
     - if 11th guess is still wrong, end game as LOSE and SHOW ANSWER
     
-    gameplay options:
+    Next step:
+    - refactor so computer can play without going through human user/CLI code
+    - create an algorithm for the computer to play as the guesser
+    - CLI shows colors while typing
+    
+    Future gameplay options:
     - mid-game, you can give up and start a new game if you want
     - option for no double colors
