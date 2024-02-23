@@ -158,7 +158,6 @@ def play():
         if user_input == "y":
             game = Mastermind()
             game.generate_random_answer_code()
-            breakpoint()
 
             print_formatted_text(HTML(skyblue(f"Generating code using {game.num_digits_in_code} out of {game.num_total_colors} colors.")))
             print_formatted_text(HTML(skyblue(f"Here are the possible colors: ")))
