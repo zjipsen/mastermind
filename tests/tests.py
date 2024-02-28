@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from context import mastermind
 from mastermind import mastermind
 import copy, sys, unittest

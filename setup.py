@@ -12,7 +12,7 @@ with open('LICENSE') as f:
 
 setup(
     name='mastermind',
-    version='0.1.0',
+    version='1.0.0',
     description='Play the game mastermind with command line visualization',
     long_description=readme,
     author='Zana Jipsen',

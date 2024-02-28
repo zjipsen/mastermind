@@ -78,7 +78,7 @@ class Code:
         
         feedback = []
         for i, color in enumerate(self.code):
-            # traverse forwards, looking for exact matches
+            # traverse forward, looking for exact matches (red)
             if color == solution.code[i]:
                 sln.remove(color)
                 feedback.append(Feedback.RED)
@@ -108,17 +108,17 @@ class Mastermind:
             self.answer_code_lst.append(self.colors[i])
         self.answer_code = Code(self.answer_code_lst)
 
-    def user_input_to_colors(self, guess):
+    def user_input_to_colors(self, guess_str):
         # Takes in a list of strings and attempts to map each string to a known Color
         converted_guess = []
-        for color in [g.lower() for g in guess]:
+        for color in [g.lower() for g in guess_str]:
             for c in self.colors:
                 if color == c.abbrev or color == c.name:
                     converted_guess.append(c)
         return converted_guess
 
-    def is_valid_guess(self, guess) -> bool:
-        guess_lst = guess.split()
+    def is_valid_guess(self, guess_str) -> bool:
+        guess_lst = guess_str.split()
         if len(guess_lst) != self.num_digits_in_code:  # guess must be number of digits long
             return False
 
@@ -127,9 +127,9 @@ class Mastermind:
             return False
         return True
 
-    def make_guess(self, guess) -> List[Feedback]:
+    def make_guess(self, guess_str) -> List[Feedback]:
         """ Return randomized feedback. Assumes guess was already validated. """
-        color_lst = self.user_input_to_colors(guess.split())
+        color_lst = self.user_input_to_colors(guess_str.split())
 
         guess = Code(code=color_lst)
         guess.generate_feedback(self.answer_code)
@@ -141,8 +141,8 @@ class Mastermind:
         return shuffled_feedback
 
 
-@click.command("hello")
-@click.version_option("0.1.0", prog_name="mastermind")  # TODO: replace version & name with setup.py version/name
+@click.command("play")
+@click.version_option("1.0.0", prog_name="mastermind")  # TODO: replace version & name with setup.py version/name
 def play():
     click.echo("Welcome to Mastermind! (exit with control-D)")
 
@@ -171,9 +171,10 @@ def play():
                 
                 if game.is_valid_guess(game_user_input):
                     feedback = game.make_guess(game_user_input)
+
                     # check winning condition
                     if feedback == [Feedback.RED] * game.num_digits_in_code:
-                        playing_game = False
+                        playing_game = False  # player won
                         print_formatted_text(HTML(seagreen("Hey! Congratulations! You did it! You won!!!!!")))
                     else:
                         formatted_feedback = [red("RED") if x == Feedback.RED else white("WHITE") for x in feedback]
@@ -182,7 +183,7 @@ def play():
                     print_formatted_text(HTML(red(f"I'm sorry, I couldn't parse that. Please make your guess again.")))
 
                 if game.num_turns_left == 0:
-                    playing_game = False  # lost.
+                    playing_game = False  # player lost
                     print_formatted_text(HTML(red(f"I'm very sorry to tell you this, but you have in fact lost.\n The answer was {game.answer_code.code}. Try again?")))
 
         if user_input == "n":
